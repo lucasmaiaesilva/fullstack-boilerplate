@@ -18,7 +18,8 @@ var gulp 		= require('gulp'),
 	browserify	= require('browserify'), // responsável por definir qual parte do código pertence a qual parte via require
 	watchify	= require('watchify'), // recompila o código assim que alguma mudança é detectada
 	reactify	= require('reactify'), // transform jsx files in js
-	notifier	= require('node-notifier');
+	notifier	= require('node-notifier'),
+	exec		= require('child_process').exec;
 
 
 gulp.task('browser-sync', function () {
@@ -33,6 +34,21 @@ gulp.task('browser-sync', function () {
 			baseDir: 'build/'
 		}
 	});
+});
+
+gulp.task('server', function (cb) {
+	exec('npm start', function (err, stdout, stderr) {
+		console.log(stdout);
+		console.log(stderr);
+		cb(err);
+	});
+/*
+	exec('mongod --dbpath ./data', function (err, stdout, stderr) {
+		console.log(stdout);
+		console.log(stderr);
+		cb(err);
+	});
+*/
 });
 
 gulp.task('imagemin', function() {
@@ -147,4 +163,4 @@ gulp.task('deploy-pages', function () {
 		.pipe(deploy());
 });
 
-gulp.task('default', ['html', 'stylus', 'fonts', 'watch', 'imagemin', 'react', 'scripts', 'css', 'browser-sync']);
+gulp.task('default', ['html', 'stylus', 'fonts', 'server', 'watch', 'imagemin', 'react', 'scripts', 'css', 'browser-sync']);
